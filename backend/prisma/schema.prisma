@@ -9,56 +9,43 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  firstName String?
-  lastName  String?
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
+  id           String        @id @default(cuid())
+  firstName    String?
+  lastName     String?
+  email        String        @unique
+  password     String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
   esgResponses ESGResponse[]
   responses    Response[]
 }
 
 model ESGResponse {
-  id                        String   @id @default(uuid())
-  userId                    String
-  year                      Int
-  createdAt                 DateTime @default(now())
-  updatedAt                 DateTime @updatedAt
-
-  // Environmental
+  id                              String   @id @default(uuid())
+  userId                          String
+  year                            Int
+  createdAt                       DateTime @default(now())
+  updatedAt                       DateTime @updatedAt
   totalElectricityConsumption     Float?
   renewableElectricityConsumption Float?
   totalFuelConsumption            Float?
   carbonEmissions                 Float?
-
-  // Social
-  totalEmployees       Int?
-  femaleEmployees      Int?
-  averageTrainingHours Float?
-  communityInvestment  Float?
-
-  // Governance
-  independentBoardMembers Float?
-  hasDataPrivacyPolicy    Boolean?
-  totalRevenue            Float?
-
-  // Auto-Calculated
-  carbonIntensity           Float?
-  renewableElectricityRatio Float?
-  diversityRatio            Float?
-  communitySpendRatio       Float?
-
-  // Relationship
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  totalEmployees                  Int?
+  femaleEmployees                 Int?
+  averageTrainingHours            Float?
+  communityInvestment             Float?
+  independentBoardMembers         Float?
+  hasDataPrivacyPolicy            Boolean?
+  totalRevenue                    Float?
+  carbonIntensity                 Float?
+  renewableElectricityRatio       Float?
+  diversityRatio                  Float?
+  communitySpendRatio             Float?
+  user                            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, year])
 }
 
-// Generic Response model to store any user responses
 model Response {
   id        String   @id @default(cuid())
   userId    String
@@ -66,6 +53,5 @@ model Response {
   data      Json
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
