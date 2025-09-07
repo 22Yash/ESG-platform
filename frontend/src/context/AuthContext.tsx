@@ -19,12 +19,14 @@ type AuthContextType = {
   user: UserType | null;
   login: (token: string) => void;
   logout: () => void;
+  loading: boolean; // added
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserType | null>(null);
+  const [loading, setLoading] = useState(true); // added
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -36,6 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.removeItem("token");
       }
     }
+    setLoading(false); // finished loading after check
   }, []);
 
   const login = (token: string) => {
@@ -50,7 +53,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

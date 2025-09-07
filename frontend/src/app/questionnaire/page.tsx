@@ -13,15 +13,29 @@ import {
   TrendingUp,
   BarChart3,
   Shield,
-  Globe,
   Award,
   ChevronRight,
   Download,
   RefreshCw
 } from "lucide-react";
 
+type FormDataType = {
+  year: string;
+  totalElectricityConsumption: string;
+  renewableElectricityConsumption: string;
+  totalFuelConsumption: string;
+  carbonEmissions: string;
+  totalEmployees: string;
+  femaleEmployees: string;
+  averageTrainingHours: string;
+  communityInvestment: string;
+  independentBoardMembers: string;
+  hasDataPrivacyPolicy: string;
+  totalRevenue: string;
+};
+
 export default function QuestionnairePage() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormDataType>({
     year: new Date().getFullYear().toString(),
     totalElectricityConsumption: "",
     renewableElectricityConsumption: "",
@@ -38,7 +52,7 @@ export default function QuestionnairePage() {
 
   const [activeSection, setActiveSection] = useState("year");
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -89,22 +103,20 @@ export default function QuestionnairePage() {
         totalRevenue: parseFloat(formData.totalRevenue),
       };
       
-  
       const token = localStorage.getItem("token");
-
       if (!token) {
         toast.error("You must be logged in to submit data");
         return;
       }
 
       const res = await fetch(`${API_URL}/esg`, {
-      method: "POST",
-      headers: { 
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}` // <--- send JWT here
-      },
-      body: JSON.stringify(payload)
-    });
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
   
       if (!res.ok) {
         const errorData = await res.json();
@@ -121,36 +133,64 @@ export default function QuestionnairePage() {
     }
   };
 
-const FormSection = ({ title, subtitle, icon, children, sectionId }) => (
-  <div 
-    className={`bg-white border ${activeSection === sectionId ? 'border-blue-600 shadow-lg' : 'border-gray-200'} rounded-lg transition-all duration-200`}
-    onClick={() => setActiveSection(sectionId)} // ✅ changed from onFocus → onClick
-  >
-    <div className="px-8 py-6 border-b border-gray-100">
-      <div className="flex items-center gap-4">
-        <div className="p-2 bg-gray-50 rounded-lg">
-          {icon}
-        </div>
-        <div>
-          <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
-          <p className="text-gray-600 text-sm">{subtitle}</p>
+  // -------------------------
+  // Reusable Components
+  // -------------------------
+
+  type FormSectionProps = {
+    title: string;
+    subtitle: string;
+    icon: React.ReactNode;
+    children: React.ReactNode;
+    sectionId: string;
+  };
+  
+  const FormSection: React.FC<FormSectionProps> = ({ title, subtitle, icon, children, sectionId }) => (
+    <div
+      className={`bg-white border ${sectionId === activeSection ? 'border-blue-600 shadow-lg' : 'border-gray-200'} rounded-lg transition-all duration-200`}
+      onClick={() => setActiveSection(sectionId)}
+    >
+      <div className="px-8 py-6 border-b border-gray-100">
+        <div className="flex items-center gap-4">
+          <div className="p-2 bg-gray-50 rounded-lg">{icon}</div>
+          <div>
+            <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
+            <p className="text-gray-600 text-sm">{subtitle}</p>
+          </div>
         </div>
       </div>
+      <div className="p-8">{children}</div>
     </div>
-    <div className="p-8">
-      {children}
-    </div>
-  </div>
-);
+  );
+  
 
+  type InputFieldProps = {
+    name: keyof FormDataType;
+    label: string;
+    type?: string;
+    unit?: string;
+    placeholder?: string;
+    required?: boolean;
+    isSelect?: boolean;
+    options?: { value: string; label: string }[];
+  };
 
-  const InputField = ({ name, label, type = "number", unit, placeholder, required = false, isSelect = false, options = [] }) => (
+  const InputField = ({
+    name,
+    label,
+    type = "number",
+    unit,
+    placeholder,
+    required = false,
+    isSelect = false,
+    options = []
+  }: InputFieldProps) => (
     <div className="space-y-2">
       <label className="block text-sm font-medium text-gray-900">
-        {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
+        {label} {required && <span className="text-red-500 ml-1">*</span>}
         {unit && <span className="text-gray-500 ml-1">({unit})</span>}
       </label>
+
       {isSelect ? (
         <select
           name={name}
@@ -159,7 +199,7 @@ const FormSection = ({ title, subtitle, icon, children, sectionId }) => (
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
           required={required}
         >
-          {options.map(option => (
+          {options.map((option) => (
             <option key={option.value} value={option.value}>{option.label}</option>
           ))}
         </select>
@@ -177,7 +217,15 @@ const FormSection = ({ title, subtitle, icon, children, sectionId }) => (
     </div>
   );
 
-  const MetricCard = ({ title, value, unit, change, changeType = "neutral" }) => (
+  type MetricCardProps = {
+    title: string;
+    value: string | number;
+    unit?: string;
+    change?: string | number;
+    changeType?: "positive" | "negative" | "neutral";
+  };
+
+  const MetricCard = ({ title, value, unit, change, changeType = "neutral" }:MetricCardProps) => (
     <div className="bg-white border border-gray-200 rounded-lg p-6">
       <div className="flex items-center justify-between mb-4">
         <h4 className="text-sm font-medium text-gray-600">{title}</h4>
@@ -197,6 +245,10 @@ const FormSection = ({ title, subtitle, icon, children, sectionId }) => (
       </div>
     </div>
   );
+
+  // -------------------------
+  // JSX Return (same as your original)
+  // -------------------------
 
   return (
     <div className="min-h-screen bg-gray-50">

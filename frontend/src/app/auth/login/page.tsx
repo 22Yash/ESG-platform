@@ -45,8 +45,9 @@ export default function LoginPage() {
       } else {
         toast.error(data.error || "Login failed");
       }
-    } catch (_err) {
-      toast.error("Something went wrong. Try again.");
+    } catch (err: unknown) {
+      console.error(err); // good for debugging
+      toast.error("❌ Failed to submit ESG data"); // show user-friendly message
     }
   };
 

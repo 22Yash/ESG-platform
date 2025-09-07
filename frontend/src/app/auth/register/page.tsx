@@ -50,8 +50,9 @@ export default function RegisterPage() {
       } else {
         toast.error(data.error || "Registration failed");
       }
-    } catch (_err) {
-      toast.error("Something went wrong. Try again.");
+    } catch (err: unknown) {
+      console.error(err); // good for debugging
+      toast.error("❌ something went wrong"); // show user-friendly message
     }
   };
 
