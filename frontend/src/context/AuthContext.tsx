@@ -1,7 +1,7 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import jwt_decode from "jwt-decode"; // ✅ fixed import
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
+import jwt_decode from "jwt-decode";
 
 type UserType = {
   id: string;
@@ -28,23 +28,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Helper to decode token and set user
+  const setUserFromToken = useCallback((token: string) => {
+    try {
+      const decoded = jwt_decode<JwtPayload>(token);
+      setUser({ id: decoded.id, email: decoded.email, name: decoded.name });
+    } catch {
+      localStorage.removeItem("token");
+      setUser(null);
+    }
+  }, []);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const decoded = jwt_decode<JwtPayload>(token); // ✅ use generic type
-        setUser({ id: decoded.id, email: decoded.email, name: decoded.name });
-      } catch {
-        localStorage.removeItem("token");
-      }
-    }
+    if (token) setUserFromToken(token);
     setLoading(false);
-  }, []);
+  }, [setUserFromToken]);
 
   const login = (token: string) => {
     localStorage.setItem("token", token);
-    const decoded = jwt_decode<JwtPayload>(token);
-    setUser({ id: decoded.id, email: decoded.email, name: decoded.name });
+    setUserFromToken(token);
   };
 
   const logout = () => {
@@ -59,8 +62,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useAuth = () => {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
-  return ctx;
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error("useAuth must be used inside AuthProvider");
+  return context;
 };
