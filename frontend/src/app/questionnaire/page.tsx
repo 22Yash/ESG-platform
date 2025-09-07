@@ -119,27 +119,29 @@ export default function QuestionnairePage() {
       toast.error("❌ Failed to submit ESG data");
     }
   };
-  const FormSection = ({ title, subtitle, icon, children, sectionId }) => (
-    <div 
-      className={`bg-white border ${activeSection === sectionId ? 'border-blue-600 shadow-lg' : 'border-gray-200'} rounded-lg transition-all duration-200`}
-      onFocus={() => setActiveSection(sectionId)}
-    >
-      <div className="px-8 py-6 border-b border-gray-100">
-        <div className="flex items-center gap-4">
-          <div className="p-2 bg-gray-50 rounded-lg">
-            {icon}
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
-            <p className="text-gray-600 text-sm">{subtitle}</p>
-          </div>
+
+const FormSection = ({ title, subtitle, icon, children, sectionId }) => (
+  <div 
+    className={`bg-white border ${activeSection === sectionId ? 'border-blue-600 shadow-lg' : 'border-gray-200'} rounded-lg transition-all duration-200`}
+    onClick={() => setActiveSection(sectionId)} // ✅ changed from onFocus → onClick
+  >
+    <div className="px-8 py-6 border-b border-gray-100">
+      <div className="flex items-center gap-4">
+        <div className="p-2 bg-gray-50 rounded-lg">
+          {icon}
+        </div>
+        <div>
+          <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
+          <p className="text-gray-600 text-sm">{subtitle}</p>
         </div>
       </div>
-      <div className="p-8">
-        {children}
-      </div>
     </div>
-  );
+    <div className="p-8">
+      {children}
+    </div>
+  </div>
+);
+
 
   const InputField = ({ name, label, type = "number", unit, placeholder, required = false, isSelect = false, options = [] }) => (
     <div className="space-y-2">

@@ -65,6 +65,9 @@ export default function Navbar() {
                   <Link href="/summary" className="nav-link">
                     Summary
                   </Link>
+                  <Link href="/responses" className="nav-link">
+                    My responses
+                  </Link>
                 <button onClick={logout} className="text-red-500 hover:text-red-700 font-medium">
                   Logout
                 </button>

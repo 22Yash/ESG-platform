@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
 import esgRoutes from "./routes/esg";
+import responsesRouter from "./routes/responses";
 
 dotenv.config();
 
@@ -20,6 +21,8 @@ app.use(
 
 app.use('/api/auth', authRoutes);
 app.use("/esg", esgRoutes);
+app.use("/api/responses", responsesRouter);
+
 
 app.get('/', (req, res) => res.send('API running'));
 

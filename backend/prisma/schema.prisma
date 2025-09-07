@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -9,7 +8,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
   id        String   @id @default(cuid())
   firstName String?
@@ -19,8 +17,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relation
-  responses ESGResponse[]
+  // Relations
+  esgResponses ESGResponse[]
+  responses    Response[]
 }
 
 model ESGResponse {
@@ -57,4 +56,16 @@ model ESGResponse {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, year])
+}
+
+// Generic Response model to store any user responses
+model Response {
+  id        String   @id @default(cuid())
+  userId    String
+  year      Int?
+  data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

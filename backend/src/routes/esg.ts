@@ -149,7 +149,7 @@ router.get("/", authMiddleware, async (req: AuthRequest, res) => {
   try {
     const userId = req.userId!;
     const responses = await prisma.eSGResponse.findMany({
-      where: { userId },
+      where: { userId: req.userId },
       orderBy: { year: "desc" },
     });
     res.json(responses);
