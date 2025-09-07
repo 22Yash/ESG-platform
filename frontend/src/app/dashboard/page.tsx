@@ -3,6 +3,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { Factory, Zap, Users, DollarSign, CheckCircle, AlertCircle, FileText, Calendar } from 'lucide-react';
 import toast from "react-hot-toast";
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 interface ESGData {
   id: string;
@@ -35,7 +36,7 @@ const ESGDashboard = () => {
       return;
     }
 
-    fetch('http://localhost:5000/esg', {
+    fetch(`${API_URL}/esg`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => {

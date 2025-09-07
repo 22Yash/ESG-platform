@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 import { 
   Calculator, 
   Save, 
@@ -96,7 +97,7 @@ export default function QuestionnairePage() {
         return;
       }
 
-      const res = await fetch("http://localhost:5000/esg", {
+      const res = await fetch(`${API_URL}/esg`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",

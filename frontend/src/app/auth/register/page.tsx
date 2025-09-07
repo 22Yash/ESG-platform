@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { Eye, EyeOff, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import toast from "react-hot-toast";
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,7 +32,7 @@ export default function RegisterPage() {
     e.preventDefault();
    
     try {
-      const res = await fetch('http://localhost:5000/api/auth/register', {
+      const res = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

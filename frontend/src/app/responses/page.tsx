@@ -3,6 +3,7 @@
     import React, { useEffect, useState } from "react";
     import { Loader, AlertCircle } from "lucide-react";
     import toast from "react-hot-toast";
+    const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
     interface Response {
     id: string;
@@ -23,7 +24,7 @@
     const fetchResponses = async () => {
         try {
         const token = localStorage.getItem("token");
-        const res = await fetch("http://localhost:5000/api/responses", {
+        const res = await fetch(`${API_URL}/api/responses`, {
             headers: {
             Authorization: `Bearer ${token}`,
             },

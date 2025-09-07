@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 
 import { exportESG } from "@/utils/exportESG";
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 interface ESGResponse {
   id: string;
@@ -69,7 +70,7 @@ export default function SummaryPage() {
     const fetchESGData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:5000/esg", {
+        const response = await fetch(`${API_URL}/esg`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
