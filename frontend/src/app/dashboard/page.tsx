@@ -1,8 +1,9 @@
 'use client';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { Factory, Zap, Users, DollarSign, CheckCircle, AlertCircle, FileText, Calendar } from 'lucide-react';
+import { Factory, Zap, Users, DollarSign, AlertCircle, FileText, Calendar } from 'lucide-react';
 import toast from "react-hot-toast";
+
 const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 interface ESGData {
@@ -20,6 +21,14 @@ interface ESGData {
   renewableElectricityRatio: number;
   diversityRatio: number;
   communitySpendRatio: number;
+}
+
+interface StatCardProps {
+  icon: React.ReactNode;
+  title: string;
+  value: string | number;
+  unit?: string;
+  color?: 'emerald' | 'blue' | 'purple' | 'orange' | 'red';
 }
 
 const ESGDashboard = () => {
@@ -95,7 +104,7 @@ const ESGDashboard = () => {
     communitySpendRatio: (currentData.communitySpendRatio * 100).toFixed(2)
   };
 
-  const StatCard = ({ icon, title, value, unit, color = 'emerald' }: any) => {
+  const StatCard = ({ icon, title, value, unit, color = 'emerald' }: StatCardProps) => {
     const colorClasses: Record<string, string> = {
       emerald: 'bg-emerald-50 text-emerald-600 border-emerald-200',
       blue: 'bg-blue-50 text-blue-600 border-blue-200',
@@ -118,7 +127,7 @@ const ESGDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10 mt-[100px]" >
+      <div className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10 mt-[100px]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
@@ -168,13 +177,13 @@ const ESGDashboard = () => {
         <div className="flex flex-wrap gap-4 mb-8">
           <button className="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
             <Link href="/questionnaire">Add ESG Data</Link>
-            
-            </button>
+          </button>
           <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-          <Link href="/summary"> View Summary </Link></button>
+            <Link href="/summary">View Summary</Link>
+          </button>
           <button className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-          <Link href=""> Export Report
-            </Link></button>
+            <Link href="">Export Report</Link>
+          </button>
         </div>
       </div>
     </div>

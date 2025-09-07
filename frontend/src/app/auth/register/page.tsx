@@ -4,12 +4,11 @@ import React, { useState } from 'react';
 import { Eye, EyeOff, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import toast from "react-hot-toast";
-const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -28,9 +27,8 @@ export default function RegisterPage() {
     }));
   };
 
-  const handleSubmit = async(e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-   
     try {
       const res = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
@@ -42,17 +40,17 @@ export default function RegisterPage() {
           password: formData.password,
         }),
       });
-  
+
       const data = await res.json();
       console.log('Register response:', data);
-  
+
       if (res.ok) {
         toast.success("Registration successful 🎉");
         window.location.href = '/auth/login';
       } else {
-        toast.error(data.error || "registration failed");
+        toast.error(data.error || "Registration failed");
       }
-    } catch (err) {
+    } catch (_err) {
       toast.error("Something went wrong. Try again.");
     }
   };
@@ -71,17 +69,17 @@ export default function RegisterPage() {
               <span className="text-2xl font-semibold">ESG Portal</span>
             </div>
           </div>
-          
+
           <h1 className="text-4xl font-bold mb-6 leading-tight">
             All Your <span className="text-green-200">Sustainability Data</span><br />
             and <span className="text-blue-200">Stakeholders Connected</span><br />
             in One Place
           </h1>
-          
+
           <p className="text-green-100 text-lg mb-8 leading-relaxed">
             Transform your ESG journey with AI-powered insights, automated reporting, 
             and real-time analytics. From data collection to compliance-ready reports, 
-            we've got you covered.
+            we&apos;ve got you covered.
           </p>
 
           <div className="flex items-center text-green-200">
@@ -89,7 +87,7 @@ export default function RegisterPage() {
             <span>Trusted by 100+ companies worldwide</span>
           </div>
         </div>
-        
+
         {/* Decorative elements */}
         <div className="absolute top-20 right-20 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-20 left-20 w-40 h-40 bg-blue-300/20 rounded-full blur-3xl"></div>
@@ -149,6 +147,7 @@ export default function RegisterPage() {
                   />
                 </div>
               </div>
+
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                   Email Address
@@ -189,8 +188,6 @@ export default function RegisterPage() {
                   </button>
                 </div>
               </div>
-
-            
 
               <div className="flex items-start">
                 <input

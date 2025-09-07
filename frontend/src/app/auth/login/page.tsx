@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
 import React, { useState } from 'react';
 import { Eye, EyeOff, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import toast from "react-hot-toast";
+
 const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function LoginPage() {
@@ -22,7 +23,7 @@ export default function LoginPage() {
     }));
   };
 
-  const handleSubmit = async(e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       const res = await fetch(`${API_URL}/api/auth/login`, {
@@ -33,18 +34,18 @@ export default function LoginPage() {
           password: formData.password,
         }),
       });
-  
+
       const data = await res.json();
       console.log('Login response:', data);
-  
+
       if (res.ok) {
         localStorage.setItem('token', data.token); // save JWT
         toast.success("Login successful 🎉");
-        window.location.href = '/dashboard'; // redirect after login
+        window.location.href = '/dashboard';
       } else {
         toast.error(data.error || "Login failed");
       }
-    } catch (err) {
+    } catch (_err) {
       toast.error("Something went wrong. Try again.");
     }
   };
@@ -54,7 +55,7 @@ export default function LoginPage() {
       {/* Left Side - Branding */}
       <div className="hidden lg:flex lg:w-1/2 opacity-70 bg-gradient-to-br from-green-600 via-green-500 to-blue-600 relative overflow-hidden ">
         <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative z-10 flex  flex-col justify-center px-12 text-white">
+        <div className="relative z-10 flex flex-col justify-center px-12 text-white">
           <div className="mb-8">
             <div className="flex items-center mb-6">
               <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center mr-3">
@@ -73,7 +74,7 @@ export default function LoginPage() {
           <p className="text-green-100 text-lg mb-8 leading-relaxed">
             Transform your ESG journey with AI-powered insights, automated reporting, 
             and real-time analytics. From data collection to compliance-ready reports, 
-            we've got you covered.
+            we&apos;ve got you covered.
           </p>
 
           <div className="flex items-center text-green-200">
@@ -180,7 +181,7 @@ export default function LoginPage() {
 
             <div className="mt-8 text-center">
               <p className="mt-8 text-sm text-gray-600">
-                Don't have an account?{' '}
+                Don&apos;t have an account?{' '}
                 <Link 
                   href="/auth/register" 
                   className="font-medium text-green-600 hover:text-green-700"
