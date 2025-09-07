@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import { ArrowRight, Play, Globe } from 'lucide-react';
 
 export default function Hero() {
-  const [videoPlaying, setVideoPlaying] = useState(false);
+  // Only define state if needed
+  // const [videoPlaying, setVideoPlaying] = useState(false);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-emerald-50">
@@ -31,7 +32,7 @@ export default function Hero() {
             
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               Transform your ESG journey with AI-powered insights, automated reporting, and real-time analytics. 
-              From data collection to compliance-ready reports, we've got you covered.
+              From data collection to compliance-ready reports, we&apos;ve got you covered.
             </p>
           </div>
 
@@ -41,15 +42,13 @@ export default function Hero() {
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </button>
             <button 
-              onClick={() => setVideoPlaying(true)}
+              // onClick={() => setVideoPlaying(true)}
               className="group px-8 py-4 border-2 border-gray-300 text-gray-700 rounded-xl hover:border-emerald-600 hover:text-emerald-600 transition-all duration-200 font-semibold flex items-center gap-2 text-lg"
             >
               <Play size={20} />
               Watch Demo
             </button>
           </div>
-
-          
         </div>
       </div>
     </section>

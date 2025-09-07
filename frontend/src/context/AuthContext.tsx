@@ -1,10 +1,13 @@
-// src/context/AuthContext.tsx
-"use client";
-
-import { createContext, useContext, useEffect, useState } from "react";
-import jwtDecode from "jwt-decode";
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import {jwtDecode} from "jwt-decode";
 
 type UserType = {
+  id: string;
+  email: string;
+  name?: string;
+};
+
+type JwtPayload = {
   id: string;
   email: string;
   name?: string;
@@ -16,27 +19,18 @@ type AuthContextType = {
   logout: () => void;
 };
 
-type DecodedToken = {
-  id: string;
-  email: string;
-  name?: string;
-  iat?: number;
-  exp?: number;
-};
-
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserType | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decoded = jwtDecode<DecodedToken>(token);
+        const decoded = jwtDecode<JwtPayload>(token);
         setUser({ id: decoded.id, email: decoded.email, name: decoded.name });
-      } catch (err) {
-        console.error("Invalid token", err);
+      } catch {
         localStorage.removeItem("token");
       }
     }
@@ -44,7 +38,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = (token: string) => {
     localStorage.setItem("token", token);
-    const decoded = jwtDecode<DecodedToken>(token);
+    const decoded = jwtDecode<JwtPayload>(token);
     setUser({ id: decoded.id, email: decoded.email, name: decoded.name });
   };
 
