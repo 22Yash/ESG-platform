@@ -31,3 +31,11 @@ input:-webkit-autofill {
   -webkit-text-fill-color: #000 !important;
   transition: background-color 5000s ease-in-out 0s;
 }
+
+
+.nav-link {
+  @apply text-gray-600 hover:text-emerald-600 font-medium transition-colors;
+}
+.btn-primary {
+  @apply px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg shadow-lg hover:shadow-xl font-medium transition;
+}

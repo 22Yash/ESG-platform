@@ -66,3 +66,25 @@ export interface EnvironmentalMetrics {
     errors: ValidationError[];
     lastSaved?: Date;
   }
+
+  export interface ESGResponse {
+    carbonIntensity?: number;
+    renewableElectricityRatio?: number;
+    diversityRatio?: number;
+    communitySpendRatio?: number;
+  
+    totalElectricityConsumption?: number;
+    renewableElectricityConsumption?: number;
+    carbonEmissions?: number;
+  
+    totalEmployees?: number;
+    femaleEmployees?: number;
+    averageTrainingHours?: number;
+    communityInvestment?: number;
+  
+    independentBoardMembers?: number;
+    hasDataPrivacyPolicy?: boolean;
+  
+    totalRevenue?: number;
+  }
+  

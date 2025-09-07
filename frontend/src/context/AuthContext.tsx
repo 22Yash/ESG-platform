@@ -1,58 +1,59 @@
+// context/AuthContext.tsx
 "use client";
+
 import { createContext, useContext, useEffect, useState } from "react";
+import {jwtDecode} from "jwt-decode";
 
-interface User {
+type UserType = {
   id: string;
-  name: string;
   email: string;
-}
+  name?: string;
+};
 
-interface AuthContextType {
-  user: User | null;
-  setUser: (user: User | null) => void;
+type AuthContextType = {
+  user: UserType | null;
+  login: (token: string) => void;
   logout: () => void;
-}
+};
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
 
   useEffect(() => {
-    // Try fetching current user when app loads
-    const checkAuth = async () => {
+    const token = localStorage.getItem("token");
+    if (token) {
       try {
-        const res = await fetch("http://localhost:5000/api/auth/me", {
-          credentials: "include",
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setUser(data.user);
-        }
+        const decoded: any = jwtDecode(token);
+        setUser({ id: decoded.id, email: decoded.email, name: decoded.name });
       } catch (err) {
-        setUser(null);
+        console.error("Invalid token", err);
+        localStorage.removeItem("token");
       }
-    };
-    checkAuth();
+    }
   }, []);
 
-  const logout = async () => {
-    await fetch("http://localhost:5000/api/auth/logout", {
-      method: "POST",
-      credentials: "include",
-    });
+  const login = (token: string) => {
+    localStorage.setItem("token", token);
+    const decoded: any = jwtDecode(token);
+    setUser({ id: decoded.id, email: decoded.email, name: decoded.name });
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, logout }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used inside AuthProvider");
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
+  return ctx;
 };

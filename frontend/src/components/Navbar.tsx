@@ -3,74 +3,20 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { useAuth } from "@/context/AuthContext"; // 👈 import auth context
+import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { user, logout } = useAuth(); // 👈 get user + logout
+  const { user, logout, loading } = useAuth();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const guestLinks = (
-    <>
-      <Link
-        href="#features"
-        className="text-gray-600 hover:text-emerald-600 transition-colors font-medium"
-      >
-        Features
-      </Link>
-      <Link
-        href="#how-it-works"
-        className="text-gray-600 hover:text-emerald-600 transition-colors font-medium"
-      >
-        How It Works
-      </Link>
-      <div className="flex items-center gap-4 ml-4">
-        <Link
-          href="/auth/login"
-          className="text-gray-600 hover:text-emerald-600 transition-colors font-medium"
-        >
-          Login
-        </Link>
-        <Link
-          href="/auth/register"
-          className="px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
-        >
-          Get Started
-        </Link>
-      </div>
-    </>
-  );
-
-  const userLinks = (
-    <>
-      <Link
-        href="/dashboard"
-        className="text-gray-600 hover:text-emerald-600 transition-colors font-medium"
-      >
-        Dashboard
-      </Link>
-      <Link
-        href="/account"
-        className="text-gray-600 hover:text-emerald-600 transition-colors font-medium"
-      >
-        Account
-      </Link>
-      <button
-        onClick={logout}
-        className="text-red-500 hover:text-red-700 font-medium"
-      >
-        Logout
-      </button>
-    </>
-  );
+  if (loading) return null; // wait until auth is loaded
 
   return (
     <header
@@ -90,7 +36,40 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
-            {!user ? guestLinks : userLinks}
+            {!user ? (
+              <>
+                <Link href="#features" className="nav-link">
+                  Features
+                </Link>
+                <Link href="#how-it-works" className="nav-link">
+                  How It Works
+                </Link>
+                <Link href="/auth/login" className="nav-link">
+                  Login
+                </Link>
+                <Link
+                  href="/auth/register"
+                  className="btn-primary"
+                >
+                  Get Started
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link href="/dashboard" className="nav-link">
+                    Dashboard
+                  </Link>
+                  <Link href="/questionnaire" className="nav-link">
+                    Add ESG data 
+                  </Link>
+                  <Link href="/summary" className="nav-link">
+                    Summary
+                  </Link>
+                <button onClick={logout} className="text-red-500 hover:text-red-700 font-medium">
+                  Logout
+                </button>
+              </>
+            )}
           </nav>
 
           {/* Mobile menu button */}
@@ -102,11 +81,44 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-white border-t border-gray-100 shadow-lg">
-            <div className="px-4 py-6 space-y-4 flex flex-col">
-              {!user ? guestLinks : userLinks}
+          <div className="lg:hidden bg-white shadow-lg border-t border-gray-200">
+            <div className="flex flex-col gap-4 p-4">
+              {!user ? (
+                <>
+                  <Link href="#features" className="nav-link">
+                    Features
+                  </Link>
+                  <Link href="#how-it-works" className="nav-link">
+                    How It Works
+                  </Link>
+                  <Link href="/auth/login" className="nav-link">
+                    Login
+                  </Link>
+                  <Link href="/auth/register" className="btn-primary text-center">
+                    Get Started
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/dashboard" className="nav-link">
+                    Dashboard
+                  </Link>
+                  <Link href="/ questionnaire" className="nav-link">
+                    Add ESG data 
+                  </Link>
+                  <Link href="/summary" className="nav-link">
+                    Summary
+                  </Link>
+
+
+                  
+                  <button onClick={logout} className="text-red-500 hover:text-red-700 font-medium text-left">
+                    Logout
+                  </button>
+                </>
+              )}
             </div>
           </div>
         )}
@@ -114,3 +126,4 @@ export default function Navbar() {
     </header>
   );
 }
+

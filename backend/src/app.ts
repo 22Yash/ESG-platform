@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
+import esgRoutes from "./routes/esg";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(
 );
 
 app.use('/api/auth', authRoutes);
+app.use("/esg", esgRoutes);
 
 app.get('/', (req, res) => res.send('API running'));
 
