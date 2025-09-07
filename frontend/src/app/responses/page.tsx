@@ -2,6 +2,7 @@
 
     import React, { useEffect, useState } from "react";
     import { Loader, AlertCircle } from "lucide-react";
+    import toast from "react-hot-toast";
 
     interface Response {
     id: string;
@@ -36,7 +37,7 @@
         if (data.length > 0) setSelectedYear(data[0].year); // default latest year
         } catch (err: any) {
         console.error(err);
-        setError(err.message || "Something went wrong");
+        toast.error(err.message || "Something went wrong");
         } finally {
         setLoading(false);
         }

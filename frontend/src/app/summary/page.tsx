@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
+import toast from "react-hot-toast";
 import {
   BarChart,
   Bar,
@@ -88,7 +89,7 @@ export default function SummaryPage() {
         }
       } catch (err: any) {
         console.error(err);
-        setError(err.message || "Failed to fetch ESG data.");
+        toast.error(err.message || "Failed to fetch ESG data.");
       } finally {
         setLoading(false);
       }

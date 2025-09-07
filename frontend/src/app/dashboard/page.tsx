@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { Factory, Zap, Users, DollarSign, CheckCircle, AlertCircle, FileText, Calendar } from 'lucide-react';
+import toast from "react-hot-toast";
 
 interface ESGData {
   id: string;
@@ -48,7 +49,7 @@ const ESGDashboard = () => {
       })
       .catch(err => {
         console.error(err);
-        setError('Failed to load ESG data');
+        toast.error('Failed to load ESG data');
       })
       .finally(() => setLoading(false));
   }, []);

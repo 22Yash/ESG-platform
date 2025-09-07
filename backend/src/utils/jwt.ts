@@ -10,7 +10,7 @@ export interface JwtPayload {
 }
 
 const defaultOptions: SignOptions = {
-  expiresIn: JWT_EXPIRES_IN as string | number
+  expiresIn: (JWT_EXPIRES_IN as any) || "7d"
 };
 
 export function signToken(payload: JwtPayload) {
