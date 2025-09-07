@@ -2,7 +2,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import jwtDecode from "jwt-decode"; // fixed import
+import jwtDecode from "jwt-decode";
 
 type UserType = {
   id: string;
@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decoded: DecodedToken = jwtDecode<DecodedToken>(token);
+        const decoded = jwtDecode<DecodedToken>(token);
         setUser({ id: decoded.id, email: decoded.email, name: decoded.name });
       } catch (err) {
         console.error("Invalid token", err);
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = (token: string) => {
     localStorage.setItem("token", token);
-    const decoded: DecodedToken = jwtDecode<DecodedToken>(token);
+    const decoded = jwtDecode<DecodedToken>(token);
     setUser({ id: decoded.id, email: decoded.email, name: decoded.name });
   };
 
