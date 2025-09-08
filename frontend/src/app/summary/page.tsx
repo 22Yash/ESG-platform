@@ -166,25 +166,26 @@ export default function SummaryPage() {
   };
 
   const handleExport = (format: "PDF" | "CSV") => {
-    if (!currentData || !selectedYear) return;
-    
-    const dataWithMetrics = {
-      ...currentData,
-      calculatedMetrics: {
-        carbonIntensity: currentData.carbonIntensity || 0,
-        renewableElectricityRatio: currentData.renewableElectricityRatio || 0,
-        diversityRatio: currentData.diversityRatio || 0,
-        communitySpendRatio: currentData.communitySpendRatio || 0,
-      },
-    };
-    
-    exportESG(
-      dataWithMetrics as any, // Type assertion to bypass the type mismatch
-      selectedYear,
-      format,
-      dashboardRef.current
-    );
+  if (!currentData || !selectedYear) return;
+
+  // Extend ESGResponse so calculatedMetrics is guaranteed
+  const dataWithMetrics: ESGResponse = {
+    ...currentData,
+    calculatedMetrics: {
+      carbonIntensity: currentData.carbonIntensity ?? 0,
+      renewableElectricityRatio: currentData.renewableElectricityRatio ?? 0,
+      diversityRatio: currentData.diversityRatio ?? 0,
+      communitySpendRatio: currentData.communitySpendRatio ?? 0,
+    },
   };
+
+  exportESG(
+    dataWithMetrics,
+    selectedYear,
+    format,
+    dashboardRef.current
+  );
+};
 
   const pieData = [
     { name: "Renewable", value: currentData.renewableElectricityConsumption || 0, fill: "#10B981" },
