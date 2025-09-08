@@ -1,53 +1,48 @@
 "use client";
+import React, { createContext, useState, useEffect, ReactNode } from "react";
+import { jwtDecode } from "jwt-decode";
 
-import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
-import jwt_decode from "jwt-decode";
-
-type UserType = {
+// Define the shape of your JWT payload
+interface DecodedToken {
   id: string;
   email: string;
-  name?: string;
-};
+  exp: number; // expiry timestamp
+  iat?: number; // issued at (optional)
+}
 
-type JwtPayload = {
-  id: string;
-  email: string;
-  name?: string;
-};
-
-type AuthContextType = {
-  user: UserType | null;
+// Define your AuthContext state type
+interface AuthContextType {
+  user: DecodedToken | null;
   login: (token: string) => void;
   logout: () => void;
-  loading: boolean;
-};
+}
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<UserType | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  // Helper to decode token and set user
-  const setUserFromToken = useCallback((token: string) => {
-    try {
-      const decoded = jwt_decode<JwtPayload>(token);
-      setUser({ id: decoded.id, email: decoded.email, name: decoded.name });
-    } catch {
-      localStorage.removeItem("token");
-      setUser(null);
-    }
-  }, []);
+  const [user, setUser] = useState<DecodedToken | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) setUserFromToken(token);
-    setLoading(false);
-  }, [setUserFromToken]);
+    if (token) {
+      try {
+        const decoded = jwtDecode<DecodedToken>(token);
+        if (decoded.exp * 1000 > Date.now()) {
+          setUser(decoded);
+        } else {
+          localStorage.removeItem("token");
+        }
+      } catch (error) {
+        console.error("Invalid token:", error);
+        localStorage.removeItem("token");
+      }
+    }
+  }, []);
 
   const login = (token: string) => {
     localStorage.setItem("token", token);
-    setUserFromToken(token);
+    const decoded = jwtDecode<DecodedToken>(token);
+    setUser(decoded);
   };
 
   const logout = () => {
@@ -56,14 +51,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used inside AuthProvider");
-  return context;
 };
