@@ -28,37 +28,8 @@ import {
 } from "lucide-react";
 
 import { exportESG } from "@/utils/exportESG";
+import { ESGResponse } from "@/types/esg";   // ✅ import shared type
 const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-
-interface ESGResponse {
-  id: string;
-  userId: string;
-  year: number;
-  totalElectricityConsumption?: number;
-  renewableElectricityConsumption?: number;
-  totalFuelConsumption?: number;
-  carbonEmissions?: number;
-  totalEmployees?: number;
-  femaleEmployees?: number;
-  averageTrainingHours?: number;
-  communityInvestment?: number;
-  independentBoardMembers?: number;
-  hasDataPrivacyPolicy?: boolean;
-  totalRevenue?: number;
-  carbonIntensity?: number;
-  renewableElectricityRatio?: number;
-  diversityRatio?: number;
-  communitySpendRatio?: number;
-  createdAt?: string;
-  updatedAt?: string;
-
-  calculatedMetrics?: {
-    carbonIntensity: number;
-    renewableElectricityRatio: number;
-    diversityRatio: number;
-    communitySpendRatio: number;
-  };
-}
 
 interface StatCardProps {
   icon: React.ReactNode;
@@ -90,10 +61,18 @@ export default function SummaryPage() {
         if (!response.ok) throw new Error(`Error: ${response.statusText}`);
 
         const resData: ESGResponse[] = await response.json();
-        if (!resData || resData.length === 0) {
+
+        // ✅ Convert date strings → Date
+        const normalized = resData.map((d) => ({
+          ...d,
+          createdAt: d.createdAt ? new Date(d.createdAt) : undefined,
+          updatedAt: d.updatedAt ? new Date(d.updatedAt) : undefined,
+        }));
+
+        if (!normalized || normalized.length === 0) {
           setError("No ESG data found.");
         } else {
-          const sortedData = resData.sort((a, b) => b.year - a.year);
+          const sortedData = normalized.sort((a, b) => b.year - a.year);
           setData(sortedData);
           if (selectedYear === null) setSelectedYear(sortedData[0].year);
         }
@@ -108,7 +87,7 @@ export default function SummaryPage() {
     };
 
     fetchESGData();
-  }, []); // ✅ fixed dependency
+  }, []); // ✅ ignore selectedYear to silence ESLint
 
   const currentData = data.find((d) => d.year === selectedYear);
   const years = Array.from(new Set(data.map((d) => d.year))).sort(
