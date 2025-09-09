@@ -26,6 +26,6 @@ export interface ESGResponse {
   diversityRatio?: number;            // %
   communitySpendRatio?: number;       // %
 
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
