@@ -87,7 +87,7 @@ export default function SummaryPage() {
     };
 
     fetchESGData();
-  }, []); // ✅ ignore selectedYear to silence ESLint
+  }, [selectedYear]); // ✅ ignore selectedYear to silence ESLint
 
   const currentData = data.find((d) => d.year === selectedYear);
   const years = Array.from(new Set(data.map((d) => d.year))).sort(
