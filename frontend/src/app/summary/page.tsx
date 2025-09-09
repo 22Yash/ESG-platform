@@ -51,8 +51,7 @@ interface ESGResponse {
   communitySpendRatio?: number;
   createdAt?: string;
   updatedAt?: string;
-  
-  // Make this optional since API data might not have it
+
   calculatedMetrics?: {
     carbonIntensity: number;
     renewableElectricityRatio: number;
@@ -99,7 +98,8 @@ export default function SummaryPage() {
           if (selectedYear === null) setSelectedYear(sortedData[0].year);
         }
       } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : "Failed to fetch ESG data";
+        const message =
+          err instanceof Error ? err.message : "Failed to fetch ESG data";
         toast.error(message);
         setError(message);
       } finally {
@@ -108,10 +108,12 @@ export default function SummaryPage() {
     };
 
     fetchESGData();
-  }, [selectedYear]);
+  }, []); // ✅ fixed dependency
 
   const currentData = data.find((d) => d.year === selectedYear);
-  const years = Array.from(new Set(data.map((d) => d.year))).sort((a, b) => b - a);
+  const years = Array.from(new Set(data.map((d) => d.year))).sort(
+    (a, b) => b - a
+  );
 
   if (loading)
     return (
@@ -143,7 +145,13 @@ export default function SummaryPage() {
       : "N/A",
   };
 
-  const StatCard = ({ icon, title, value, unit, color = "emerald" }: StatCardProps) => {
+  const StatCard = ({
+    icon,
+    title,
+    value,
+    unit,
+    color = "emerald",
+  }: StatCardProps) => {
     const colorClasses: Record<string, string> = {
       emerald: "bg-emerald-50 text-emerald-600 border-emerald-200",
       blue: "bg-blue-50 text-blue-600 border-blue-200",
@@ -154,53 +162,61 @@ export default function SummaryPage() {
     return (
       <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200">
         <div className="flex items-center justify-between mb-4">
-          <div className={`p-3 rounded-xl ${colorClasses[color]} border`}>{icon}</div>
+          <div className={`p-3 rounded-xl ${colorClasses[color]} border`}>
+            {icon}
+          </div>
         </div>
         <h3 className="text-gray-600 text-sm font-medium mb-2">{title}</h3>
         <div className="flex items-baseline gap-2">
           <span className="text-3xl font-bold text-gray-900">{value}</span>
-          {unit && <span className="text-gray-500 text-sm font-medium">{unit}</span>}
+          {unit && (
+            <span className="text-gray-500 text-sm font-medium">{unit}</span>
+          )}
         </div>
       </div>
     );
   };
 
   const handleExport = (format: "PDF" | "CSV") => {
-  if (!currentData || !selectedYear) return;
+    if (!currentData || !selectedYear) return;
 
-  // Extend ESGResponse so calculatedMetrics is guaranteed
-  const dataWithMetrics: ESGResponse = {
-    ...currentData,
-    calculatedMetrics: {
-      carbonIntensity: currentData.carbonIntensity ?? 0,
-      renewableElectricityRatio: currentData.renewableElectricityRatio ?? 0,
-      diversityRatio: currentData.diversityRatio ?? 0,
-      communitySpendRatio: currentData.communitySpendRatio ?? 0,
-    },
+    const dataWithMetrics: ESGResponse = {
+      ...currentData,
+      calculatedMetrics: {
+        carbonIntensity: currentData.carbonIntensity ?? 0,
+        renewableElectricityRatio: currentData.renewableElectricityRatio ?? 0,
+        diversityRatio: currentData.diversityRatio ?? 0,
+        communitySpendRatio: currentData.communitySpendRatio ?? 0,
+      },
+    };
+
+    exportESG(dataWithMetrics, selectedYear, format, dashboardRef.current);
   };
 
-  exportESG(
-    dataWithMetrics,
-    selectedYear,
-    format,
-    dashboardRef.current
-  );
-};
-
   const pieData = [
-    { name: "Renewable", value: currentData.renewableElectricityConsumption || 0, fill: "#10B981" },
+    {
+      name: "Renewable",
+      value: currentData.renewableElectricityConsumption || 0,
+      fill: "#10B981",
+    },
     {
       name: "Non-Renewable",
-      value: (currentData.totalElectricityConsumption || 0) - (currentData.renewableElectricityConsumption || 0),
+      value:
+        (currentData.totalElectricityConsumption || 0) -
+        (currentData.renewableElectricityConsumption || 0),
       fill: "#EF4444",
     },
   ];
 
   const trendData = data.map((d) => ({
     year: d.year,
-    "Renewable %": d.renewableElectricityRatio ? d.renewableElectricityRatio * 100 : 0,
+    "Renewable %": d.renewableElectricityRatio
+      ? d.renewableElectricityRatio * 100
+      : 0,
     "Diversity %": d.diversityRatio ? d.diversityRatio * 100 : 0,
-    "Community Spend %": d.communitySpendRatio ? d.communitySpendRatio * 100 : 0,
+    "Community Spend %": d.communitySpendRatio
+      ? d.communitySpendRatio * 100
+      : 0,
   }));
 
   return (
@@ -208,7 +224,9 @@ export default function SummaryPage() {
       {/* Header */}
       <div className="bg-white shadow-sm border-b border-gray-200 mt-[100px]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">ESG Summary Dashboard</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            ESG Summary Dashboard
+          </h1>
           <div className="relative">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -217,7 +235,9 @@ export default function SummaryPage() {
               <Download size={16} /> Export
               <ChevronDown
                 size={16}
-                className={`transform transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
+                className={`transform transition-transform ${
+                  isDropdownOpen ? "rotate-180" : ""
+                }`}
               />
             </button>
             {isDropdownOpen && (
@@ -242,7 +262,9 @@ export default function SummaryPage() {
 
       {/* Year Dropdown */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <label className="block text-gray-700 font-medium mb-2">Select Year:</label>
+        <label className="block text-gray-700 font-medium mb-2">
+          Select Year:
+        </label>
         <select
           value={selectedYear || ""}
           onChange={(e) => setSelectedYear(Number(e.target.value))}
@@ -257,36 +279,39 @@ export default function SummaryPage() {
       </div>
 
       {/* Dashboard */}
-      <div ref={dashboardRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div
+        ref={dashboardRef}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+      >
         {/* Key Metrics Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <StatCard 
-            icon={<Factory size={20} />} 
-            title="Carbon Intensity" 
-            value={calculatedMetrics.carbonIntensity} 
-            unit="T CO₂e/M INR" 
-            color="red" 
+          <StatCard
+            icon={<Factory size={20} />}
+            title="Carbon Intensity"
+            value={calculatedMetrics.carbonIntensity}
+            unit="T CO₂e/M INR"
+            color="red"
           />
-          <StatCard 
-            icon={<Zap size={20} />} 
-            title="Renewable Energy" 
-            value={calculatedMetrics.renewableRatio} 
-            unit="%" 
-            color="emerald" 
+          <StatCard
+            icon={<Zap size={20} />}
+            title="Renewable Energy"
+            value={calculatedMetrics.renewableRatio}
+            unit="%"
+            color="emerald"
           />
-          <StatCard 
-            icon={<Users size={20} />} 
-            title="Gender Diversity" 
-            value={calculatedMetrics.diversityRatio} 
-            unit="%" 
-            color="purple" 
+          <StatCard
+            icon={<Users size={20} />}
+            title="Gender Diversity"
+            value={calculatedMetrics.diversityRatio}
+            unit="%"
+            color="purple"
           />
-          <StatCard 
-            icon={<DollarSign size={20} />} 
-            title="Community Investment" 
-            value={calculatedMetrics.communitySpendRatio} 
-            unit="% of Revenue" 
-            color="orange" 
+          <StatCard
+            icon={<DollarSign size={20} />}
+            title="Community Investment"
+            value={calculatedMetrics.communitySpendRatio}
+            unit="% of Revenue"
+            color="orange"
           />
         </div>
 
@@ -300,32 +325,41 @@ export default function SummaryPage() {
                 ESG Metrics Trends
               </h3>
               <ResponsiveContainer width="100%" height={350}>
-                <LineChart data={trendData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <LineChart
+                  data={trendData}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                   <XAxis dataKey="year" stroke="#666" />
                   <YAxis stroke="#666" />
-                  <Tooltip contentStyle={{ backgroundColor: "white", border: "1px solid #e5e7eb", borderRadius: "8px" }} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "white",
+                      border: "1px solid #e5e7eb",
+                      borderRadius: "8px",
+                    }}
+                  />
                   <Legend />
-                  <Line 
-                    type="monotone" 
-                    dataKey="Renewable %" 
-                    stroke="#10B981" 
-                    strokeWidth={3} 
-                    dot={{ fill: "#10B981", strokeWidth: 2, r: 4 }} 
+                  <Line
+                    type="monotone"
+                    dataKey="Renewable %"
+                    stroke="#10B981"
+                    strokeWidth={3}
+                    dot={{ fill: "#10B981", strokeWidth: 2, r: 4 }}
                   />
-                  <Line 
-                    type="monotone" 
-                    dataKey="Diversity %" 
-                    stroke="#8B5CF6" 
-                    strokeWidth={3} 
-                    dot={{ fill: "#8B5CF6", strokeWidth: 2, r: 4 }} 
+                  <Line
+                    type="monotone"
+                    dataKey="Diversity %"
+                    stroke="#8B5CF6"
+                    strokeWidth={3}
+                    dot={{ fill: "#8B5CF6", strokeWidth: 2, r: 4 }}
                   />
-                  <Line 
-                    type="monotone" 
-                    dataKey="Community Spend %" 
-                    stroke="#F59E0B" 
-                    strokeWidth={3} 
-                    dot={{ fill: "#F59E0B", strokeWidth: 2, r: 4 }} 
+                  <Line
+                    type="monotone"
+                    dataKey="Community Spend %"
+                    stroke="#F59E0B"
+                    strokeWidth={3}
+                    dot={{ fill: "#F59E0B", strokeWidth: 2, r: 4 }}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -345,7 +379,9 @@ export default function SummaryPage() {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name}\n${(percent! * 100).toFixed(1)}%`}
+                  label={({ name, percent }) =>
+                    `${name}\n${percent ? (percent * 100).toFixed(1) : 0}%`
+                  } // ✅ fixed NaN issue
                   outerRadius={120}
                   dataKey="value"
                 >
@@ -353,7 +389,12 @@ export default function SummaryPage() {
                     <Cell key={`cell-${index}`} fill={entry.fill} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(val: number) => [`${val.toLocaleString()} kWh`, ""]} />
+                <Tooltip
+                  formatter={(val: number) => [
+                    `${val.toLocaleString()} kWh`,
+                    "",
+                  ]}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
