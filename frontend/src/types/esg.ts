@@ -1,7 +1,7 @@
 export interface ESGResponse {
   id: string;
   userId: string;
-  year: number;  // ✅ fixed: now number
+  year: number;  // ✅ fixed: number instead of string
 
   // Environmental
   totalElectricityConsumption?: number;      // kWh
@@ -28,4 +28,12 @@ export interface ESGResponse {
 
   createdAt?: Date;
   updatedAt?: Date;
+
+  // ✅ Added this block to fix your export issue
+  calculatedMetrics?: {
+    carbonIntensity: number;
+    renewableElectricityRatio: number;
+    diversityRatio: number;
+    communitySpendRatio: number;
+  };
 }
