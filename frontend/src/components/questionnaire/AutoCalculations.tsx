@@ -138,68 +138,13 @@ const AutoCalculations: React.FC<AutoCalculationsProps> = ({ data, year }) => {
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold">
-                    {metric.isValid
-                      ? formatValue(metric.value, metric.unit)
-                      : '—'}
-                  </div>
-                  <div className="text-xs opacity-80">{metric.unit}</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-2 px-2">
-              <div className="text-xs text-gray-500">{metric.formula}</div>
-              {!metric.isValid && (
-                <div className="text-xs text-amber-600 mt-1">
-                  ⚠️ Missing required data for calculation
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
-
-        <div className="pt-4 border-t border-gray-100">
-          <div className="text-xs text-gray-500 space-y-1">
-            <p>• Calculations update in real-time as you enter data</p>
-            <p>• All ratios are calculated based on your inputs</p>
-            <p>• Carbon intensity shows emissions per revenue unit</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default AutoCalculations;    <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
-      <div className="bg-gradient-to-r from-gray-800 to-gray-900 px-6 py-4">
-        <div className="flex items-center">
-          <Calculator className="w-6 h-6 text-white mr-3" />
-          <h3 className="text-lg font-semibold text-white">Auto-Calculated Metrics</h3>
-        </div>
-        <p className="text-gray-300 text-sm mt-1">FY {year}</p>
-      </div>
-      
-      <div className="p-6 space-y-6">
-        {metrics.map((metric, index) => (
-          <div key={index} className="relative">
-            <div className={`
-              p-4 rounded-lg bg-gradient-to-r ${metric.color} 
-              ${metric.isValid ? 'opacity-100' : 'opacity-50'}
-            `}>
-              <div className="flex items-start justify-between text-white">
-                <div className="flex items-center">
-                  {metric.icon}
-                  <span className="ml-2 font-medium text-sm">{metric.label}</span>
-                </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold">
                     {metric.isValid ? formatValue(metric.value, metric.unit) : '—'}
                   </div>
                   <div className="text-xs opacity-80">{metric.unit}</div>
                 </div>
               </div>
             </div>
-            
+
             <div className="mt-2 px-2">
               <div className="text-xs text-gray-500">{metric.formula}</div>
               {!metric.isValid && (
@@ -210,7 +155,7 @@ export default AutoCalculations;    <div className="bg-white rounded-xl shadow-s
             </div>
           </div>
         ))}
-        
+
         <div className="pt-4 border-t border-gray-100">
           <div className="text-xs text-gray-500 space-y-1">
             <p>• Calculations update in real-time as you enter data</p>
@@ -224,3 +169,4 @@ export default AutoCalculations;    <div className="bg-white rounded-xl shadow-s
 };
 
 export default AutoCalculations;
+        
