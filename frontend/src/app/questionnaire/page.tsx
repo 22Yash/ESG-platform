@@ -265,16 +265,7 @@ export default function QuestionnairePage() {
                 <p className="text-gray-600">Environmental, Social & Governance Reporting Platform</p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <button className="flex items-center gap-2 px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50">
-                <Download size={16} />
-                Export Template
-              </button>
-              <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                <Save size={16} />
-                Save Progress
-              </button>
-            </div>
+            
           </div>
         </div>
       </header>
@@ -485,7 +476,7 @@ export default function QuestionnairePage() {
             </div>
 
             {/* ESG Score Preview */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
+            {/* <div className="bg-white border border-gray-200 rounded-lg p-6">
               <div className="flex items-center gap-3 mb-4">
                 <Award className="text-orange-500" size={20} />
                 <h3 className="text-lg font-semibold text-gray-900">ESG Score Preview</h3>
@@ -525,10 +516,10 @@ export default function QuestionnairePage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Quick Actions */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
+            {/* <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
               <div className="space-y-3">
                 <button className="w-full flex items-center gap-3 px-4 py-3 text-left border border-gray-200 rounded-lg hover:bg-gray-50">
@@ -544,7 +535,7 @@ export default function QuestionnairePage() {
                   <span className="text-sm">Compliance Check</span>
                 </button>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

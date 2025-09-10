@@ -4,11 +4,13 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation"; // ✅ import router
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, logout, loading } = useAuth();
+  const router = useRouter(); // ✅ initialize router
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -17,6 +19,11 @@ export default function Navbar() {
   }, []);
 
   if (loading) return null; // wait until auth is loaded
+
+  const handleLogout = () => {
+    logout();          // clear token + context
+    router.push("/");  // ✅ redirect to home (or "/auth/login")
+  };
 
   return (
     <header
@@ -47,28 +54,28 @@ export default function Navbar() {
                 <Link href="/auth/login" className="nav-link">
                   Login
                 </Link>
-                <Link
-                  href="/auth/register"
-                  className="btn-primary"
-                >
+                <Link href="/auth/register" className="btn-primary">
                   Get Started
                 </Link>
               </>
             ) : (
               <>
                 <Link href="/dashboard" className="nav-link">
-                    Dashboard
-                  </Link>
-                  <Link href="/questionnaire" className="nav-link">
-                    Add ESG data 
-                  </Link>
-                  <Link href="/summary" className="nav-link">
-                    Summary
-                  </Link>
-                  <Link href="/responses" className="nav-link">
-                    My responses
-                  </Link>
-                <button onClick={logout} className="text-red-500 hover:text-red-700 font-medium">
+                  Dashboard
+                </Link>
+                <Link href="/questionnaire" className="nav-link">
+                  Add ESG data
+                </Link>
+                <Link href="/summary" className="nav-link">
+                  Summary
+                </Link>
+                <Link href="/responses" className="nav-link">
+                  My responses
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="text-red-500 hover:text-red-700 font-medium"
+                >
                   Logout
                 </button>
               </>
@@ -108,16 +115,19 @@ export default function Navbar() {
                   <Link href="/dashboard" className="nav-link">
                     Dashboard
                   </Link>
-                  <Link href="/ questionnaire" className="nav-link">
-                    Add ESG data 
+                  <Link href="/questionnaire" className="nav-link">
+                    Add ESG data
                   </Link>
                   <Link href="/summary" className="nav-link">
                     Summary
                   </Link>
-
-
-                  
-                  <button onClick={logout} className="text-red-500 hover:text-red-700 font-medium text-left">
+                  <Link href="/responses" className="nav-link">
+                    My responses
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="text-red-500 hover:text-red-700 font-medium text-left"
+                  >
                     Logout
                   </button>
                 </>
@@ -129,4 +139,3 @@ export default function Navbar() {
     </header>
   );
 }
-
