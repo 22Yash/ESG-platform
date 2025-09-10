@@ -1,7 +1,8 @@
 // src/routes/responses.ts
 import { Router } from "express";
-import { prisma } from "../prisma";
+import {prisma} from "../prisma";
 import { authMiddleware, AuthRequest } from "../middleware/auth";
+import { ESGResponse } from "@prisma/client"; // ✅ Prisma-generated type
 
 const router = Router();
 
@@ -14,8 +15,8 @@ router.get("/", authMiddleware, async (req: AuthRequest, res) => {
       orderBy: { year: "desc" },
     });
 
-    // Optional: map the data to a unified format if needed
-    const formattedResponses = responses.map((r) => ({
+    // ✅ Explicitly type r as ESGResponse
+    const formattedResponses = responses.map((r: ESGResponse) => ({
       id: r.id,
       year: r.year,
       data: {
