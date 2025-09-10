@@ -1,5 +1,7 @@
 
 
+# 🌱 ESG Questionnaire Platform
+
 ## 📂 Project Structure
 
 ```
@@ -7,29 +9,27 @@
 ├── backend/                # Node.js + Express + Prisma backend
 │   ├── prisma/             # Database schema & migrations
 │   ├── src/
-│   │   ├── middleware/     # Authentication middleware
+│   │   ├── middleware/     # JWT authentication middleware
 │   │   ├── routes/         # API route handlers
 │   │   ├── utils/          # Helper functions
-│   │   ├── app.ts          # Express app config
+│   │   ├── app.ts          # Express app configuration
 │   │   ├── prisma.ts       # Prisma client
-│   │   ├── seed.ts         # Seed database
+│   │   ├── seed.ts         # Database seeding
 │   │   └── server.ts       # Server entrypoint
-│   └── ...
 │
 ├── frontend/               # Next.js + TypeScript frontend
 │   ├── public/             # Static assets
 │   ├── src/
-│   │   ├── app/            # App router pages
+│   │   ├── app/            # App Router pages
 │   │   │   ├── auth/       # Login & Register pages
-│   │   │   ├── dashboard/  # ESG dashboard
-│   │   │   ├── questionnaire/ # ESG questionnaire
-│   │   │   ├── responses/  # View past responses
-│   │   │   └── summary/    # Charts & downloadable summary
+│   │   │   ├── dashboard/  # ESG dashboard (protected)
+│   │   │   ├── questionnaire/ # ESG questionnaire (protected)
+│   │   │   ├── responses/  # View past responses (protected)
+│   │   │   └── summary/    # Charts & downloads (protected)
 │   │   ├── components/     # Reusable UI components
 │   │   ├── context/        # Global state (AuthContext)
 │   │   ├── types/          # TypeScript types
 │   │   └── utils/          # ESG calculations & exports
-│   └── ...
 │
 ├── .env                    # Environment variables
 ├── package.json
@@ -40,39 +40,39 @@
 
 ## ✨ Features
 
-* 🔐 **Authentication** – User registration, login, and JWT-based session handling
-* 📊 **ESG Questionnaire** – Input environmental, social, and governance metrics per financial year
+* 🔐 **Authentication** – JWT-based login & registration
+* 📊 **ESG Questionnaire** – Collect Environmental, Social, Governance metrics per financial year
 * ⚡ **Real-Time Calculations**
 
   * Carbon Intensity
   * Renewable Electricity Ratio
   * Diversity Ratio
   * Community Spend Ratio
-* 📈 **Dashboard & Summary** – Charts using Recharts/Chart.js
-* 💾 **Persistence** – Responses stored in PostgreSQL via Prisma ORM
-* 📑 **Export** – Download filled questionnaire & summary in **PDF/Excel**
-* 🎨 **UI/UX** – Built with Next.js, TailwindCSS, and reusable components
+* 📈 **Dashboard & Summary** – Interactive charts with **Recharts**
+* 💾 **Persistence** – Responses stored in PostgreSQL (Prisma ORM)
+* 📑 **Export** – Download questionnaire & summary as **PDF/Excel**
+* 🎨 **Modern UI/UX** – Next.js, TailwindCSS, and reusable components
 
 ---
 
 ## 🛠️ Tech Stack
 
-**Frontend:**
+**Frontend**
 
 * Next.js (App Router) + TypeScript
 * TailwindCSS
-* Chart.js / Recharts
+* Recharts (for data visualization)
 
-**Backend:**
+**Backend**
 
 * Node.js + Express (TypeScript)
 * Prisma ORM
 * PostgreSQL
 
-**Other:**
+**Other**
 
 * JWT Authentication
-* PDF/Excel export libraries
+* PDF/Excel Export Libraries
 
 ---
 
@@ -97,7 +97,7 @@ cp .env.example .env
 # Run Prisma migrations
 npx prisma migrate dev --name init
 
-# Seed DB
+# Seed database
 npm run seed
 
 # Start backend server
@@ -119,14 +119,35 @@ npm run dev
 
 ---
 
+## 📌 Environment Variables
+
+### Backend (`backend/.env`)
+
+```env
+DATABASE_URL="postgresql://..."
+JWT_SECRET="your-secret-key"
+FRONTEND_URL="http://localhost:3000"
+```
+
+### Frontend (`frontend/.env`)
+
+```env
+NEXT_PUBLIC_BACKEND_URL="http://localhost:5000"
+```
+
+---
+
 ## 📌 API Endpoints
 
-| Endpoint             | Method | Description                    | Auth Required  |
-| -------------------- | ------ | ------------------------------ | -------------  |
-| `/api/auth/register` | POST   | Register a new user            | ❌             |
-| `/api/auth/login`    | POST   | Login and get JWT              | ❌             |
-| `/api/responses`     | POST   | Save ESG response              | ✅             |
-| `/api/responses`     | GET    | Fetch logged-in user responses | ✅             |
+| Endpoint             | Method | Description                    | Auth |
+| -------------------- | ------ | ------------------------------ | ---- |
+| `/api/auth/register` | POST   | Register new user              | ❌    |
+| `/api/auth/login`    | POST   | Login, returns JWT             | ❌    |
+| `/api/responses`     | POST   | Save ESG response              | ✅    |
+| `/api/responses`     | GET    | Fetch logged-in user responses | ✅    |
+| `/api/responses/:id` | GET    | Fetch single response          | ✅    |
+| `/api/responses/:id` | PUT    | Update a response              | ✅    |
+| `/api/responses/:id` | DELETE | Delete a response              | ✅    |
 
 ---
 
@@ -149,10 +170,9 @@ npm run dev
 
 ## 📦 Deployment
 
-* Backend: Deploy on **Render**
-* Frontend: Deploy on **Vercel**
-* Database: **Supabase**
+* **Backend:** Render
+* **Frontend:** Vercel
+* **Database:** Supabase
 
 ---
-
 
