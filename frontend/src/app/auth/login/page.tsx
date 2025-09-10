@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Eye, EyeOff, CheckCircle } from 'lucide-react';
-import Link from 'next/link';
+import React, { useState } from "react";
+import { Eye, EyeOff, CheckCircle } from "lucide-react";
+import Link from "next/link";
 import toast from "react-hot-toast";
 
 const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -10,16 +10,16 @@ const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    rememberMe: false
+    email: "",
+    password: "",
+    rememberMe: false,
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -27,8 +27,8 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       const res = await fetch(`${API_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: formData.email,
           password: formData.password,
@@ -36,12 +36,12 @@ export default function LoginPage() {
       });
 
       const data = await res.json();
-      console.log('Login response:', data);
+      console.log("Login response:", data);
 
       if (res.ok) {
-        localStorage.setItem('token', data.token); // save JWT
+        localStorage.setItem("token", data.token); // save JWT
         toast.success("Login successful 🎉");
-        window.location.href = '/dashboard';
+        window.location.href = "/dashboard";
       } else {
         toast.error(data.error || "Login failed");
       }
@@ -65,17 +65,19 @@ export default function LoginPage() {
               <span className="text-2xl font-semibold">ESG Portal</span>
             </div>
           </div>
-          
+
           <h1 className="text-4xl font-bold mb-6 leading-tight">
-            All Your <span className="text-green-200">Sustainability Data</span><br />
-            and <span className="text-blue-200">Stakeholders Connected</span><br />
+            All Your <span className="text-green-200">Sustainability Data</span>
+            <br />
+            and <span className="text-blue-200">Stakeholders Connected</span>
+            <br />
             in One Place
           </h1>
-          
+
           <p className="text-green-100 text-lg mb-8 leading-relaxed">
-            Transform your ESG journey with AI-powered insights, automated reporting, 
-            and real-time analytics. From data collection to compliance-ready reports, 
-            we&apos;ve got you covered.
+            Transform your ESG journey with AI-powered insights, automated
+            reporting, and real-time analytics. From data collection to
+            compliance-ready reports, we&apos;ve got you covered.
           </p>
 
           <div className="flex items-center text-green-200">
@@ -83,7 +85,7 @@ export default function LoginPage() {
             <span>Trusted by 100+ companies worldwide</span>
           </div>
         </div>
-        
+
         {/* Decorative elements */}
         <div className="absolute top-20 right-20 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-20 left-20 w-40 h-40 bg-blue-300/20 rounded-full blur-3xl"></div>
@@ -97,7 +99,9 @@ export default function LoginPage() {
             <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center mr-2">
               <span className="text-white font-bold text-sm">esg</span>
             </div>
-            <span className="text-xl font-semibold text-gray-900">ESG Portal</span>
+            <span className="text-xl font-semibold text-gray-900">
+              ESG Portal
+            </span>
           </div>
 
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
@@ -112,7 +116,10 @@ export default function LoginPage() {
 
             <div className="space-y-6">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Email Address
                 </label>
                 <input
@@ -128,12 +135,15 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Password
                 </label>
                 <div className="relative">
                   <input
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     id="password"
                     name="password"
                     value={formData.password}
@@ -147,7 +157,11 @@ export default function LoginPage() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -161,7 +175,9 @@ export default function LoginPage() {
                     onChange={handleInputChange}
                     className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500"
                   />
-                  <span className="ml-2 text-sm text-gray-600">Remember me</span>
+                  <span className="ml-2 text-sm text-gray-600">
+                    Remember me
+                  </span>
                 </label>
                 <button
                   type="button"
@@ -178,13 +194,33 @@ export default function LoginPage() {
               >
                 Sign In
               </button>
+
+              <div className="flex items-center my-4">
+                <div className="flex-grow border-t border-gray-300"></div>
+                <span className="mx-3 text-gray-500 text-sm">or</span>
+                <div className="flex-grow border-t border-gray-300"></div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setFormData({
+                    email: "test@gmail.com",
+                    password: "test123",
+                    rememberMe: false,
+                  })
+                }
+                className="w-full mt-3 border border-green-500 text-green-600 py-3 px-4 rounded-lg font-semibold hover:bg-green-50 focus:ring-4 focus:ring-green-200 transition-all duration-200"
+              >
+                Use Demo Credentials
+              </button>
             </div>
 
             <div className="mt-8 text-center">
               <p className="mt-8 text-sm text-gray-600">
-                Don&apos;t have an account?{' '}
-                <Link 
-                  href="/auth/register" 
+                Don&apos;t have an account?{" "}
+                <Link
+                  href="/auth/register"
                   className="font-medium text-green-600 hover:text-green-700"
                 >
                   Sign up
